@@ -7,6 +7,7 @@ import HowItWorks from './components/HowItWorks';
 import Footer from './components/Footer';
 import type { CaptionResult, ProcessSummary } from './types';
 
+// Triggering redeploy with Vercel environment variables updated
 export default function App() {
   const [captions, setCaptions] = useState<CaptionResult[] | null>(null);
   const [summary, setSummary] = useState<ProcessSummary | null>(null);
