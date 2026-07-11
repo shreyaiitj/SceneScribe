@@ -63,6 +63,8 @@ async def generate_captions_endpoint(request: CaptionRequest):
             task_id="frontend-task",
             captions=captions
         )
+    except HTTPException as he:
+        raise he
     except Exception as e:
         _log_error(f"Error processing frontend request: {e}")
         raise HTTPException(status_code=500, detail=str(e))
