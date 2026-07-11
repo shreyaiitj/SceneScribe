@@ -147,15 +147,18 @@ Avoid any subjective language, personal opinions, or creative styling. Just writ
     # ------------------------------------------------------------------
     def _build_confidence_prompt(self, scene_description: str, audio_transcript: str = None) -> List[Dict]:
         system_prompt = """You are a precise video captioning AI with self-awareness.
-        You are a film critic. Analyze:
-- Lighting and color (dark, bright, neon?)
-- Camera movement (panning, zooming, shaky?)
-- Emotional tone (dramatic, funny, suspenseful?)
-- Key objects and characters visible
-
 You will be given a neutral visual description of a video, and optionally, an audio transcript.
 
-Your task: Generate captions in 4 distinct styles. For **every** caption, you **must** provide a confidence score between 0 and 100.
+Your task: Generate captions in exactly 4 distinct styles. 
+For each caption, you must capture the real events and details of the video while applying the style.
+
+Style Guidelines:
+1. "formal": Clear, professional, and factual tone. Describe the key visual details objectively.
+2. "sarcastic": Sarcastic, dry, ironic, or mocking tone, but must remain accurate to the actual events in the video.
+3. "humorous_tech": Funny with programming, software engineering, or technical references, combined with real video details.
+4. "humorous_non_tech": Funny, everyday humor with no technical/programming jargon whatsoever.
+
+For every style, you must provide a confidence score between 0 and 100 representing how certain you are of the translation.
 
 Confidence Score Guidelines:
 - 90-100: Very certain (clear visual evidence, no ambiguity).
@@ -163,11 +166,11 @@ Confidence Score Guidelines:
 - 50-69: Somewhat uncertain (limited evidence, making some educated guesses).
 - 0-49: Very uncertain (mostly guessing, describe it as such).
 
-Your output MUST be a single valid JSON object. Do NOT wrap in markdown.
+Your output MUST be a single valid JSON object. Do NOT wrap in markdown or markdown code blocks in your completion.
 The JSON must have exactly these 4 keys: "formal", "sarcastic", "humorous_tech", "humorous_non_tech".
 Each value must be an object with "caption" (string) and "confidence" (integer).
 
-Example:
+Example output format:
 {
     "formal": {"caption": "A cat sits on a windowsill.", "confidence": 95},
     "sarcastic": {"caption": "Another cat. Groundbreaking.", "confidence": 80},
@@ -178,7 +181,7 @@ Example:
         user_content = f"Visual Scene Description:\n{scene_description}\n\n"
         if audio_transcript:
             user_content += f"Audio Transcript (spoken words):\n{audio_transcript}\n\n"
-        user_content += "Generate the 4 confidence-aware captions in JSON format."
+        user_content += "Generate the 4 confidence-aware captions matching the style guidelines in JSON format."
 
         return [
             {"role": "system", "content": system_prompt},
