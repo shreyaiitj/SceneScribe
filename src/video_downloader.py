@@ -27,7 +27,7 @@ def download_video(url: str) -> Optional[str]:
                 url,
                 stream=True,
                 timeout=TIMEOUT_SECONDS,
-                headers={"User-Agent": "Mozilla/5.0 (compatible; HackathonBot/1.0)"}
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"}
             )
             response.raise_for_status()
 
