@@ -47,10 +47,12 @@ async def generate_captions_endpoint(request: CaptionRequest):
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Caption engine not ready: {e}")
 
-    _log_info(f"Received frontend request for video: {request.video_url}")
+    # Automatically remove any spaces from the URL (common copy-paste issue)
+    clean_url = request.video_url.replace(" ", "").strip()
+    _log_info(f"Received frontend request for video: {clean_url}")
     video_path = None
     try:
-        video_path = download_video(request.video_url)
+        video_path = download_video(clean_url)
         if not video_path:
             raise HTTPException(status_code=400, detail="Failed to download video from the provided URL.")
 
